@@ -15,6 +15,8 @@ except:
 
 import getopt, sys
 from data_set import *
+from hmm import Hmm
+from run_verbati import RunVerbati
 
 debug = False
 
@@ -22,6 +24,7 @@ def main():
 
   #Setup Variables
   data = None
+  hmm = None
 
   #Import arguments and parse into options.
   try:
@@ -62,6 +65,8 @@ def main():
         usage()
       if argument == '1':
         # call HMM process
+        hmm = Hmm(None, None, None, None)
+        RunVerbati(data, hmm)
       elif argument == '2':
         print "Functionality not implemented"
         exit()
