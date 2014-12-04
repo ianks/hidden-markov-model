@@ -1,9 +1,33 @@
-# HMM involves a hidden state that changes over time, as well as observable
-# evidence that is used to make an inference about a hidden state.
-#
-# An HMM is define by three sets of probabilities:
-#    1. Probability of observing each output o at that state:
-#        - P(E[t]=o | X[t]=s)
-#    2. Probability of moving from current state to every other state:
-#        - P(X[t+1]=s' | X[t]=s)
-#    3. Distrubution over the start state P(X[0])
+try:
+    from IPython import embed
+except:
+    pass
+
+class Hmm(object):
+
+  # numStates, numOutputs are integer values
+  # state, output are 2D Arrays
+  def __init__(self, numStates, numOutputs, state, output):
+    # TODO
+    self.numStates = numStates
+    self.numOutputs = numOutputs
+    self._state = state
+    self._output = output
+
+  # Returns the log probability assigned by this HMM to a
+  # transition fromt he dummy start state to a given state
+  def logStartProbability(self, state):
+    #TODO
+    pass
+
+  # Returns the log probability assigned by this HMM to a
+  # transition from 'fromState' to 'toState'
+  def logTransProb(self, fromState, toState):
+    #TODO
+    pass
+
+  # Returns the log probability of 'state' emitting
+  # 'output'
+  def logOutputProb(self, state, output):
+    #TODO
+    pass
