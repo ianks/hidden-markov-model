@@ -1,15 +1,15 @@
-from verbati import Verbati
+from viterbi import Viterbi
 
-class RunVerbati(object):
+class run_viterbi(object):
   def __init__(self, data, hmm):
     self.data = data
     self.hmm = hmm
-    self.runVerbati()
+    self.run_viterbi()
 
-  def runVerbati(self):
+  def run_viterbi(self):
     data = self.data
     hmm = self.hmm
-    verbati = Verbati(hmm)
+    viterbi = Viterbi(hmm)
 
     #Start probabilitites
     print "Start probabilities:"

@@ -14,9 +14,10 @@ except:
     pass
 
 import getopt, sys
-from data_set import *
+import run_viterbi
+from data import *
 from hmm import Hmm
-from run_verbati import RunVerbati
+
 
 debug = False
 
@@ -66,7 +67,7 @@ def main():
       if argument == '1':
         # call HMM process
         hmm = Hmm(None, None, None, None)
-        RunVerbati(data, hmm)
+        run_viterbi(data, hmm)
       elif argument == '2':
         print "Functionality not implemented"
         exit()
