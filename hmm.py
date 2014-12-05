@@ -63,6 +63,6 @@ class Hmm(object):
             output_count += 1
     # Using Laplace smoothing:
     # Divide by the number of times the state occurs
-    output_probability = (output_count + 1) / float (state_count + self.unique_outputs_count)
+    output_probability = (output_count + 1) / float(state_count + self.unique_outputs_count)
     # Natural log that puppy and return it
     return Math.log(output_probability, 2)
