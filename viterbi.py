@@ -3,7 +3,7 @@ try:
 except:
     pass
 
-class Verbati(object):
+class Viterbi(object):
   def __init__(self, hmm):
     self.hmm = hmm
 
