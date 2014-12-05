@@ -1,12 +1,12 @@
 from verbati import Verbati
 
-class RunVerbati(object):
+class run_verbati(object):
   def __init__(self, data, hmm):
     self.data = data
     self.hmm = hmm
-    self.runVerbati()
+    self.run_verbati()
 
-  def runVerbati(self):
+  def run_verbati(self):
     data = self.data
     hmm = self.hmm
     verbati = Verbati(hmm)
