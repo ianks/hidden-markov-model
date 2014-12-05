@@ -4,9 +4,12 @@ class Collection(object):
         self.set_delimiter = '..'
         self.sequence_delimiter = sequence_delimiter
         self.point_parser = point_parser
+        self.states = {}
+
         self.sets = self._create_sets()
         self.training = self.sets[0]
         self.testing = self.sets[1]
+        self.state_count = len(self.states)
 
     def _create_sets(self):
         return [Set(s, self) for s in self._parse_raw_collection()]
@@ -53,4 +56,7 @@ class Point(object):
         self.output = self.data['output']
 
     def _parse_raw_point(self, raw_point):
+        # Insert raw point into hash table to ensure uniqueness
+        self.collection.states[raw_point] = True
+
         return self.collection.point_parser(raw_point)
