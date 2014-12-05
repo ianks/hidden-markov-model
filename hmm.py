@@ -23,7 +23,7 @@ class Hmm(object):
     # Count the number of sequences starting with the given state
     for sequence in self.training_set:
       if sequence[0].input == state:
-        state_count++
+        state_count += 1
     # divide by the number of total sequences
     state_probability = state_count / len(self.training_set)
     # Natural log that puppy and return it
@@ -39,9 +39,9 @@ class Hmm(object):
     for sequence in self.training_set:
       for i in len(sequence)-1:
         if sequence[i].input == fromState and sequence[i+1] == tostate:
-          transition_from_to_count++
+          transition_from_to_count += 1
         if sequence[i].input != sequence[i=1].input
-          transition_count++
+          transition_count += 1
     # Using Laplace smoothing:
     # Divide by number of transitions from the fromState to any State
     transition_probability = (transition_from_to_count+1) / (transition_count + self.unique_state_count)
@@ -58,9 +58,9 @@ class Hmm(object):
     for sequence in self.training_set:
       for point in sequence:
         if point.input == state
-          state_count++
+          state_count += 1
           if point.output == output:
-            output_count++
+            output_count += 1
     # Using Laplace smoothing:
     # Divide by the number of times the state occurs
     output_probability = (output_count + 1) / (state_count + self.unique_outputs_count)
