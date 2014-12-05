@@ -7,5 +7,5 @@ class Typo(data.Collection):
 
             return { 'input': x, 'output': y }
 
-        sequence_delimiter = '__'
+        sequence_delimiter = '_ _'
         data.Collection.__init__(self, file, sequence_delimiter, point_parser)
