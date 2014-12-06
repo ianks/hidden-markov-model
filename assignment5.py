@@ -54,7 +54,7 @@ def main():
                 print "You must input a problem number"
                 usage()
             if argument == '1':
-                data = src.Robot('data/robot_no_momemtum.data')
+                data = src.Robot('data/test_robot.data')
             elif argument == '2':
                 print "Functionality not implemented"
             elif argument == '3':

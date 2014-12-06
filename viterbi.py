@@ -51,5 +51,6 @@ class Viterbi(object):
         if len(output) != 1:
             n = t
         (prob, state) = max((back_pointer[n][state], state) for state in self.states)
+        embed()
         return (prob, path[state])
 
