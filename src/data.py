@@ -24,7 +24,7 @@ class Collection(object):
     def _sanitize_file(self, file):
         file = open(file).read().splitlines()
 
-        return '\n'.join(file[:-1])
+        return '\n'.join(file)
 
 
 class Set(object):

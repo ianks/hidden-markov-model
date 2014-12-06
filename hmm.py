@@ -40,13 +40,12 @@ class Hmm(object):
             for i in range(len(sequence.points)-1):
                 if sequence.points[i].input == from_state and sequence.points[i+1].input == to_state:
                     transition_from_to_count += 1
-                if sequence.points[i].input != sequence.points[i+1].input:
+                if sequence.points[i].input == from_state:
                     transition_count += 1
         # Using Laplace smoothing:
         # Divide by number of transitions from the from_state to any State
         transition_probability = (transition_from_to_count+1) / float(transition_count + self.unique_state_count)
         # Natural log that puppy and return it
-        embed()
         return transition_probability
 
     # Returns the log probability of 'state' emitting

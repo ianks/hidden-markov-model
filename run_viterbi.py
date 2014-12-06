@@ -15,8 +15,7 @@ class run_viterbi(object):
         data = self.data
         hmm = self.hmm
         viterbi = Viterbi(hmm)
-
-        test = viterbi.most_likely_sequence(self.data.testing.sequences[1].outputs())
+        test = viterbi.most_likely_sequence(self.data.testing.sequences[0].outputs())
 
 
         #Start probabilitites
