@@ -17,7 +17,7 @@ class Viterbi(object):
     # state sequence should have the same number of elements as the
     # given output sequence
 
-    def mostLikelySequence(self, output):
+    def most_likely_sequence(self, output):
         back_pointer = [{}]
         path = {}
 
@@ -35,13 +35,14 @@ class Viterbi(object):
             newpath = {}
 
             for state in self.states:
-                (prob, state) = max(
-                    (Math.pow(
-                        Math.log(back_pointer[t-1][state_0], 2) +
-                        self.hmm.log_trans_prob(state_0, state) +
-                        self.hmm.log_output_prob(state, output[t]),
-                        state_0),
-                        2) for state_0 in self.states)
+                state_prob_array = []
+                for state_0 in self.states:
+                    try:
+                        state_0_prob = Math.log(back_pointer[t-1][state_0], 2) + self.hmm.log_trans_prob(state_0, state) + self.hmm.log_output_prob(state, output[t])
+                    except:
+                        embed()
+                    state_prob_array.append((state_0_prob, state_0))
+                (prob, state) = max(state_prob_array, key=lambda x: x[0])
                 back_pointer[t][state] = prob
                 newpath[state] = path[state] + [state]
 
@@ -53,3 +54,4 @@ class Viterbi(object):
             n = t
         (prob, state) = max((back_pointer[n][state], state) for state in self.states)
         return (prob, path[state])
+

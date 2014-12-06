@@ -13,8 +13,8 @@ class Hmm(object):
         # TODO
         self.unique_state_count = data.unique_state_count
         self.unique_outputs_count = data.unique_outputs_count
-        self.training_set = data.training
-        self.states = data.states
+        self.training_set = data.training.sequences
+        self.states = data.statekeys
 
     # Returns the log probability assigned by this HMM to a
     # transition from the dummy start state to a given state
@@ -22,11 +22,13 @@ class Hmm(object):
         state_count = 0
         # Count the number of sequences starting with the given state
         for sequence in self.training_set:
-            if sequence[0].input == state:
+            if sequence.points[0].input == state:
                 state_count += 1
         # divide by the number of total sequences
-        state_probability = state_count / float( len(self.training_set) )
+        state_probability = state_count / float(len(self.training_set))
         # Natural log that puppy and return it
+        if state_probability == 0:
+            embed()
         return Math.log(state_probability, 2)
 
     # Returns the log probability assigned by this HMM to a
@@ -37,10 +39,10 @@ class Hmm(object):
         # For all testing sequences
         # Count the number of transitions between from_state and to State
         for sequence in self.training_set:
-            for i in len(sequence)-1:
-                if sequence[i].input == from_state and sequence[i+1] == to_state:
+            for i in range(len(sequence.points)-1):
+                if sequence.points[i].input == from_state and sequence.points[i+1] == to_state:
                     transition_from_to_count += 1
-                if sequence[i].input != sequence[i+1].input:
+                if sequence.points[i].input != sequence.points[i+1].input:
                     transition_count += 1
         # Using Laplace smoothing:
         # Divide by number of transitions from the from_state to any State
@@ -56,7 +58,7 @@ class Hmm(object):
         # For all testing sequences
         # Count number of times the output occurs for the given state
         for sequence in self.training_set:
-            for point in sequence:
+            for point in sequence.points:
                 if point.input == state:
                     state_count += 1
                     if point.output == output:

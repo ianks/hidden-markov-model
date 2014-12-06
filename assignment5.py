@@ -14,8 +14,8 @@ except:
     pass
 
 import getopt, sys
-import run_viterbi
-from data import *
+from run_viterbi import run_viterbi
+import src
 from hmm import Hmm
 
 
@@ -23,82 +23,81 @@ debug = False
 
 def main():
 
-  #Setup Variables
-  data = None
-  hmm = None
+    #Setup Variables
+    data = None
+    hmm = None
 
-  #Import arguments and parse into options.
-  try:
-    optlist, remainder = getopt.getopt(sys.argv[1:], 'p:o:vh')
-    #If no arguments profided
-    if len(optlist) == 0:
-      print "***Options required***"
-      usage()
-  #if inappropriate argument provided
-  except getopt.GetoptError as err:
-    print str(err)
-    usage()
-
-  for option, argument in optlist:
-    if option == "-v":
-      debug = True
-      if debug:
-        #view input
-        print "\nProvided Arguments: "
-        print str(optlist) + "\n"
-    elif option == "-h":
-      usage()
-
-    elif option == "-p":
-      if argument not in ('1','2','3'):
-        print "You must input a problem number"
+    #Import arguments and parse into options.
+    try:
+        optlist, remainder = getopt.getopt(sys.argv[1:], 'p:o:vh')
+        #If no arguments profided
+        if len(optlist) == 0:
+            print "***Options required***"
+            usage()
+    #if inappropriate argument provided
+    except getopt.GetoptError as err:
+        print str(err)
         usage()
-      if argument== '1':
-        data = Robot('data/robot_no_momemtum.data', '.')
-      elif argument == '2':
-        print "Functionality not implemented"
-      elif argument == '3':
-        print "Functionality not implemented"
 
-    elif option == '-o':
-      if argument not in ('1','2'):
-        print "You must input a valid hmm order"
-        usage()
-      if argument == '1':
-        # call HMM process
-        hmm = Hmm(None, None, None, None)
-        run_viterbi(data, hmm)
-      elif argument == '2':
-        print "Functionality not implemented"
-        exit()
-  embed()
+    for option, argument in optlist:
+        if option == "-v":
+            debug = True
+            if debug:
+                #view input
+                print "\nProvided Arguments: "
+                print str(optlist) + "\n"
+        elif option == "-h":
+            usage()
+
+        elif option == "-p":
+            if argument not in ('1', '2', '3'):
+                print "You must input a problem number"
+                usage()
+            if argument == '1':
+                data = src.Robot('data/robot_no_momemtum.data')
+            elif argument == '2':
+                print "Functionality not implemented"
+            elif argument == '3':
+                print "Functionality not implemented"
+
+        elif option == '-o':
+            if argument not in ('1', '2'):
+                print "You must input a valid hmm order"
+                usage()
+            if argument == '1':
+                # call HMM process
+                hmm = Hmm(data)
+                run_viterbi(data, hmm)
+            elif argument == '2':
+                print "Functionality not implemented"
+                exit()
 
 def usage():
-  print """
+    print """
 
-  Usage:
-  ---
-    Flags
-    -p  Problem Number (1,2,3)
-    -o  HMM Order (1, 2)
-    -v  verbose
-    -h  help
-  ---
-    Problem number
-     1  Toy Robot
-     2  Typo Correction
-     3  Topic Change
-  ---
-    HMM order
-     1  First-order HMM
-     2  Second-order HMM
-  ---
-    Example Usage
-    python assignment5.py -p 2 -o 1
-    (Run with Typo Correction and first-order HMM)
+    Usage:
+    ---
+        Flags
+        -p  Problem Number (1,2,3)
+        -o  HMM Order (1, 2)
+        -v  verbose
+        -h  help
+    ---
+        Problem number
+         1  Toy Robot
+         2  Typo Correction
+         3  Topic Change
+    ---
+        HMM order
+         1  First-order HMM
+         2  Second-order HMM
+    ---
+        Example Usage
+        python assignment5.py -p 2 -o 1
+        (Run with Typo Correction and first-order HMM)
 
-  """
-  sys.exit(2)
+    """
+    sys.exit(2)
 
 if __name__ == "__main__":
     main()

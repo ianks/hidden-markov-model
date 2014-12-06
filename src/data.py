@@ -13,6 +13,8 @@ class Collection(object):
         self.unique_state_count = len(self.states)
         self.unique_outputs_count = len(self.outputs)
 
+        self.statekeys = self.states.keys()
+
     def _create_sets(self):
         return [Set(s, self) for s in self._parse_raw_collection()]
 
@@ -48,6 +50,9 @@ class Sequence(object):
     def _parse_raw_sequence(self, raw_sequence):
         return raw_sequence.splitlines()
 
+    def outputs(self):
+        return [point.output for point in self.points]
+
 
 class Point(object):
     def __init__(self, raw_point, collection):
@@ -60,9 +65,8 @@ class Point(object):
     def _parse_raw_point(self, raw_point):
         # Insert raw point into dict to ensure uniqueness
         parsed_point = self.collection.point_parser(raw_point)
-        output = parsed_point['output']
 
-        self.collection.states[raw_point] = True
-        self.collection.outputs[output] = True
+        self.collection.states[parsed_point['input']] = True
+        self.collection.outputs[parsed_point['output']] = True
 
         return parsed_point
