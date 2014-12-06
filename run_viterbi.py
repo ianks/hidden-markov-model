@@ -24,7 +24,7 @@ class run_viterbi(object):
         #Start probabilitites
         print "Start probabilities:"
         for state in self.data.statekeys:
-            print state, ':\t', "{0:.3f}".format(hmm.log_start_prob(state))
+            print state, ':\t', "{0:.3f}".format(hmm.start_prob(state))
 
 
         #Transition probabilities
@@ -37,7 +37,7 @@ class run_viterbi(object):
         for from_state in self.data.states:
             sys.stdout.write(from_state + ' :')
             for to_state in self.data.states:
-                sys.stdout.write('\t' + "{0:.3f}".format(hmm.log_trans_prob(from_state, to_state)))
+                sys.stdout.write('\t' + "{0:.3f}".format(hmm.trans_prob(from_state, to_state)))
             sys.stdout.write('\n')
             sys.stdout.flush()
 
@@ -50,7 +50,7 @@ class run_viterbi(object):
         for state in self.data.states:
             sys.stdout.write(state + ' :')
             for output in sorted(self.data.outputs):
-                sys.stdout.write('\t' + "{0:.3f}".format(hmm.log_output_prob(state, output)))
+                sys.stdout.write('\t' + "{0:.3f}".format(hmm.output_prob(state, output)))
             sys.stdout.write('\n')
             sys.stdout.flush()
 

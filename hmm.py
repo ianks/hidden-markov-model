@@ -18,7 +18,7 @@ class Hmm(object):
 
     # Returns the log probability assigned by this HMM to a
     # transition from the dummy start state to a given state
-    def log_start_prob(self, state):
+    def start_prob(self, state):
         state_count = 0
         # Count the number of sequences starting with the given state
         for sequence in self.training_set:
@@ -31,7 +31,7 @@ class Hmm(object):
 
     # Returns the log probability assigned by this HMM to a
     # transition from 'from_state' to 'to_state'
-    def log_trans_prob(self, from_state, to_state):
+    def trans_prob(self, from_state, to_state):
         transition_from_to_count = 0
         transition_count = 0
         # For all testing sequences
@@ -50,7 +50,7 @@ class Hmm(object):
 
     # Returns the log probability of 'state' emitting
     # 'output'
-    def log_output_prob(self, state, output):
+    def output_prob(self, state, output):
         output_count = 0
         state_count = 0
         # For all testing sequences
