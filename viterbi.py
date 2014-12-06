@@ -3,26 +3,53 @@ try:
 except:
     pass
 
+import math as Math
+
 class Viterbi(object):
-  def __init__(self, hmm):
-    self.hmm = hmm
+    def __init__(self, hmm):
+        self.hmm = hmm
+        self.states = hmm.states
 
-  # Returns the most likely state sequence for the given
-  # 'output' sequence, i.e., the state sequence of the highest
-  # conditional probability given the output sequence, according to
-  # the hmm that was provided by the constructor. The returned
-  # state sequence should have the same number of elements as the
-  # given output sequence
-  def mostLikelySequence(output):
-    #TODO
-    pass
+    # Returns the most likely state sequence for the given
+    # 'output' sequence, i.e., the state sequence of the highest
+    # conditional probability given the output sequence, according to
+    # the hmm that was provided by the constructor. The returned
+    # state sequence should have the same number of elements as the
+    # given output sequence
 
-    # Given an hmm with state space X, initial probabilities Pi transition matrix Aij that
-    # is P(i<t>| i<t-1>) and observations y1....yt the most likely state sequence x1..xt
-    # is calculated by:
+    def mostLikelySequence(self, output):
+        back_pointer = [{}]
+        path = {}
 
-    # v<1,i> = P(y1|i) * Pi #base case
-    # v<t,i> = P(yt|i) * max(x in X)(A<x,i> * V<t-1, x>)
-    # where
-    # v<t,i> is the value for the most probable state sequence for t observations ending at state i
-    # xt = argmax(x in X)(v<t,x>) the state at time t is the one with the max v<t,x> value\\\\\\
+        # Initialize base cases (t == 0)
+        for state in self.states:
+            back_pointer[0][state] = Math.pow(
+                self.hmm.log_start_prob(state) +
+                self.hmm.log_output_prob(state, output[0]),
+                2)
+            path[state] = [state]
+
+        # Run Viterbi for t > 0
+        for t in range(1, len(output)):
+            back_pointer.append({})
+            newpath = {}
+
+            for state in self.states:
+                (prob, state) = max(
+                    (Math.pow(
+                        Math.log(back_pointer[t-1][state_0], 2) +
+                        self.hmm.log_trans_prob(state_0, state) +
+                        self.hmm.log_output_prob(state, output[t]),
+                        state_0),
+                        2) for state_0 in self.states)
+                back_pointer[t][state] = prob
+                newpath[state] = path[state] + [state]
+
+            # Don't need to remember the old paths
+            path = newpath
+        n = 0
+        # if only one element is observed max is sought in the initialization values
+        if len(output) != 1:
+            n = t
+        (prob, state) = max((back_pointer[n][state], state) for state in self.states)
+        return (prob, path[state])
