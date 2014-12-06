@@ -18,7 +18,6 @@ class run_viterbi(object):
 
         test = viterbi.most_likely_sequence(self.data.testing.sequences[1].outputs())
 
-        embed()
 
         #Start probabilitites
         print "Start probabilities:"

@@ -27,8 +27,6 @@ class Hmm(object):
         # divide by the number of total sequences
         state_probability = state_count / float(len(self.training_set))
         # Natural log that puppy and return it
-        if state_probability == 0:
-            embed()
         return Math.log(state_probability, 2)
 
     # Returns the log probability assigned by this HMM to a
