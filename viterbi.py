@@ -23,10 +23,7 @@ class Viterbi(object):
 
         # Initialize base cases (t == 0)
         for state in self.states:
-            back_pointer[0][state] = Math.pow(
-                self.hmm.log_start_prob(state) +
-                self.hmm.log_output_prob(state, output[0]),
-                2)
+            back_pointer[0][state] = self.hmm.log_start_prob(state) * self.hmm.log_output_prob(state, output[0])
             path[state] = [state]
 
         # Run Viterbi for t > 0
@@ -38,10 +35,10 @@ class Viterbi(object):
                 state_prob_array = []
                 for state_0 in self.states:
                     try:
-                        state_0_prob = Math.log(back_pointer[t-1][state_0], 2) + self.hmm.log_trans_prob(state_0, state) + self.hmm.log_output_prob(state, output[t])
+                        state_0_prob = back_pointer[t-1][state_0] * self.hmm.log_trans_prob(state_0, state) * self.hmm.log_output_prob(state, output[t])
                     except:
                         embed()
-                    state_prob_array.append((Math.pow(state_0_prob, 2), state_0))
+                    state_prob_array.append((state_0_prob, state_0))
                 # embed()
                 (prob, max_state) = max(state_prob_array, key=lambda x: x[0])
                 back_pointer[t][state] = prob

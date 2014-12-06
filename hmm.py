@@ -27,7 +27,7 @@ class Hmm(object):
         # divide by the number of total sequences
         state_probability = state_count / float(len(self.training_set))
         # Natural log that puppy and return it
-        return Math.log(state_probability, 2)
+        return state_probability
 
     # Returns the log probability assigned by this HMM to a
     # transition from 'from_state' to 'to_state'
@@ -46,7 +46,7 @@ class Hmm(object):
         # Divide by number of transitions from the from_state to any State
         transition_probability = (transition_from_to_count+1) / float(transition_count + self.unique_state_count)
         # Natural log that puppy and return it
-        return Math.log(transition_probability, 2)
+        return transition_probability
 
     # Returns the log probability of 'state' emitting
     # 'output'
@@ -65,4 +65,4 @@ class Hmm(object):
         # Divide by the number of times the state occurs
         output_probability = (output_count + 1) / float(state_count + self.unique_outputs_count)
         # Natural log that puppy and return it
-        return Math.log(output_probability, 2)
+        return output_probability
