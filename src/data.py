@@ -50,6 +50,9 @@ class Sequence(object):
     def _parse_raw_sequence(self, raw_sequence):
         return raw_sequence.splitlines()
 
+    def inputs(self):
+        return [point.input for point in self.points]
+
     def outputs(self):
         return [point.output for point in self.points]
 

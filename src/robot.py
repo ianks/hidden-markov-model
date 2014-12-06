@@ -6,10 +6,8 @@ class Robot(data.Collection):
             if raw == '': return
 
             i, o = raw.split(' ')
-            x, y = i.split(':')
-            point = (x, y)
 
-            return { 'input': point, 'output': o }
+            return { 'input': i, 'output': o }
 
         sequence_delimiter = '.'
         data.Collection.__init__(self, file, sequence_delimiter, point_parser)
