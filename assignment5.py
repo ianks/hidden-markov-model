@@ -55,7 +55,6 @@ def main():
                 usage()
             if argument == '1':
                 data = src.Robot('data/robot_no_momemtum.data')
-                data = src.Robot('data/robot_with_no_momemtum.data')
             elif argument == '2':
                 data = src.Typo('data/typos10.data')
             elif argument == '3':
