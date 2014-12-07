@@ -54,9 +54,9 @@ def main():
                 print "You must input a problem number"
                 usage()
             if argument == '1':
-                data = src.Robot('data/test_robot.data')
+                data = src.Robot('data/robot_with_no_momemtum.data')
             elif argument == '2':
-                print "Functionality not implemented"
+                data = src.Typo('data/typos10.data')
             elif argument == '3':
                 print "Functionality not implemented"
 
