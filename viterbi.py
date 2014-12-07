@@ -35,7 +35,7 @@ class Viterbi(object):
         hmm = self.hmm
         back_pointer, path = self._init_backpointer(output)
 
-        print "Calculating most likely sequence... (one dot for every output)"
+        print "\nCalculating most likely sequence... (one dot for every output)"
         # Run Viterbi for t > 0
         for t in range(1, len(output)):
             sys.stdout.write('.')
