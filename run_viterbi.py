@@ -17,14 +17,10 @@ class run_viterbi(object):
         hmm = self.hmm
         viterbi = Viterbi(hmm)
 
-
-
-
         #Start probabilitites
         print "Start probabilities:"
         for state in self.data.statekeys:
             print state, ':\t', "{0:.3f}".format(hmm.start_prob(state))
-
 
         #Transition probabilities
         print "\nTransition probabilities:"
@@ -58,16 +54,13 @@ class run_viterbi(object):
             outputs = sequence.outputs()
             inputs = sequence.inputs()
             prob, mls = viterbi.most_likely_sequence(outputs)
+
             print "\nMost likely sequence #"+str(i)+":"
             errors = 0
             print 'input\tcalc\toutput'
-            for i in range(len(inputs)):
+            inputs_len = len(inputs)
+            for i in range(inputs_len):
                 print inputs[i], '\t', mls[i], '\t', outputs[i]
                 if inputs[i] != mls[i]:
                     errors += 1
-            print 'Errors:', errors, '/', len(inputs), '=', (errors/float(len(inputs)))
-
-
-
-
-
+            print 'Errors:', errors, '/', len(inputs), '=', (errors/float(inputs_len))

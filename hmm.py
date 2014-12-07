@@ -33,12 +33,14 @@ class Hmm(object):
 
     # Cache the trans probabilities
     def trans_prob(self, from_state, to_state):
-        if from_state in self.transitions_probabilities:
-            if to_state in self.transitions_probabilities[from_state]:
-                return self.transitions_probabilities[from_state][to_state]
+        if from_state not in self.transitions_probabilities:
+            self.transitions_probabilities[from_state] = {}
+
+        if to_state in self.transitions_probabilities[from_state]:
+            return self.transitions_probabilities[from_state][to_state]
 
         prob = self._trans_prob(from_state, to_state)
-        self.transitions_probabilities[from_state] = { to_state : prob }
+        self.transitions_probabilities[from_state][to_state] = prob
 
         return prob
 
@@ -50,7 +52,9 @@ class Hmm(object):
         # For all testing sequences
         # Count the number of transitions between from_state and to State
         for sequence in self.training_set:
-            for i in range(len(sequence.points)-1):
+            points_len = len(sequence.points) - 1
+
+            for i in range(points_len):
                 if sequence.points[i].input == from_state and sequence.points[i+1].input == to_state:
                     transition_from_to_count += 1
                 if sequence.points[i].input == from_state:
@@ -63,12 +67,14 @@ class Hmm(object):
 
     # Cache output probabilities
     def output_prob(self, state, output):
-        if state in self.output_probabilities:
-            if output in self.output_probabilities[state]:
-                return self.output_probabilities[state][output]
+        if state not in self.output_probabilities:
+            self.output_probabilities[state] = {}
+
+        if output in self.output_probabilities[state]:
+            return self.output_probabilities[state][output]
 
         prob = self._output_prob(state, output)
-        self.output_probabilities[state] = { output : prob }
+        self.output_probabilities[state][output] = prob
 
         return prob
 

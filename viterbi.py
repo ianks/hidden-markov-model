@@ -37,7 +37,9 @@ class Viterbi(object):
 
         print "\nCalculating most likely sequence... (one dot for every output)"
         # Run Viterbi for t > 0
-        for t in range(1, len(output)):
+        length = len(output)
+
+        for t in range(1, length):
             sys.stdout.write('.')
             sys.stdout.flush()
             back_pointer.append({})

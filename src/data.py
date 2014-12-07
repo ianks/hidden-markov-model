@@ -1,8 +1,8 @@
 class Collection(object):
     def __init__(self, file, sequence_delimiter, point_parser):
-        self.file = self._sanitize_file(file)
         self.set_delimiter = '..'
         self.sequence_delimiter = sequence_delimiter
+        self.file = self._sanitize_file(file)
         self.point_parser = point_parser
         self.states = {}
         self.outputs = {}
@@ -24,7 +24,10 @@ class Collection(object):
     def _sanitize_file(self, file):
         file = open(file).read().splitlines()
 
-        return '\n'.join(file)
+        if self.sequence_delimiter == '.':
+            return '\n'.join(file[:-1])
+        else:
+            return '\n'.join(file)
 
 
 class Set(object):

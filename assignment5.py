@@ -8,16 +8,12 @@
 #        - P(X[t+1]=s' | X[t]=s)
 #    3. Distrubution over the start state P(X[0])
 
-try:
-    from IPython import embed
-except:
-    pass
-
-import getopt, sys
-from run_viterbi import run_viterbi
 import src
-from hmm import Hmm
+import profile
+import getopt, sys
 
+from hmm import Hmm
+from run_viterbi import run_viterbi
 
 debug = False
 
@@ -102,4 +98,5 @@ def usage():
     sys.exit(2)
 
 if __name__ == "__main__":
+    # profile.run('main()')
     main()
