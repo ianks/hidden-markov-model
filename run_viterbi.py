@@ -60,6 +60,7 @@ class run_viterbi(object):
             prob, mls = viterbi.most_likely_sequence(outputs)
             print "\nMost likely sequence #"+str(i)+":"
             errors = 0
+            print 'input\tcalc\toutput'
             for i in range(len(inputs)):
                 print inputs[i], '\t', mls[i], '\t', outputs[i]
                 if inputs[i] != mls[i]:

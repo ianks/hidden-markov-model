@@ -50,7 +50,7 @@ def main():
             usage()
 
         elif option == "-p":
-            if argument not in ('1', '2', '3'):
+            if argument not in ('1', '2', '3', 't'):
                 print "You must input a problem number"
                 usage()
             if argument == '1':
@@ -59,6 +59,8 @@ def main():
                 data = src.Typo('data/typos10.data')
             elif argument == '3':
                 print "Functionality not implemented"
+            elif argument == 't':
+                data = src.Robot('data/test_robot.data')
 
         elif option == '-o':
             if argument not in ('1', '2'):
