@@ -10,7 +10,6 @@ class Hmm(object):
     # numStates, unique_outputs_count are integer values
     # state, output are 2D Arrays
     def __init__(self, data):
-        # TODO
         self.unique_state_count = data.unique_state_count
         self.unique_outputs_count = data.unique_outputs_count
         self.training_set = data.training.sequences

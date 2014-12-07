@@ -1,8 +1,14 @@
+try:
+    from IPython import embed
+except:
+    pass
+
 class Collection(object):
-    def __init__(self, file, sequence_delimiter, point_parser):
+    def __init__(self, file, sequence_delimiter, sequence_parser, point_parser):
         self.set_delimiter = '..'
         self.sequence_delimiter = sequence_delimiter
         self.file = self._sanitize_file(file)
+        self.sequence_parser = sequence_parser
         self.point_parser = point_parser
         self.states = {}
         self.outputs = {}
@@ -36,7 +42,7 @@ class Set(object):
         self.sequences = self._create_sequences(raw_set)
 
     def _create_sequences(self, raw_set):
-        return [Sequence(s, self.collection) for s in self._parse_raw_set(raw_set)]
+        return [Sequence(s, self.collection) for s in self._parse_raw_set(raw_set) if s]
 
     def _parse_raw_set(self, raw_set):
         return raw_set.split(self.collection.sequence_delimiter)
@@ -51,7 +57,7 @@ class Sequence(object):
         return [Point(p, self.collection) for p in self._parse_raw_sequence(raw_sequence) if p]
 
     def _parse_raw_sequence(self, raw_sequence):
-        return raw_sequence.splitlines()
+        return self.collection.sequence_parser(raw_sequence)
 
     def inputs(self):
         return [point.input for point in self.points]
