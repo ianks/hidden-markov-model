@@ -1,8 +1,8 @@
 class Collection(object):
     def __init__(self, file, sequence_delimiter, point_parser):
-        self.file = self._sanitize_file(file)
         self.set_delimiter = '..'
         self.sequence_delimiter = sequence_delimiter
+        self.file = self._sanitize_file(file)
         self.point_parser = point_parser
         self.states = {}
         self.outputs = {}
@@ -13,6 +13,8 @@ class Collection(object):
         self.unique_state_count = len(self.states)
         self.unique_outputs_count = len(self.outputs)
 
+        self.statekeys = self.states.keys()
+
     def _create_sets(self):
         return [Set(s, self) for s in self._parse_raw_collection()]
 
@@ -22,7 +24,10 @@ class Collection(object):
     def _sanitize_file(self, file):
         file = open(file).read().splitlines()
 
-        return '\n'.join(file[:-1])
+        if self.sequence_delimiter == '.':
+            return '\n'.join(file[:-1])
+        else:
+            return '\n'.join(file)
 
 
 class Set(object):
@@ -48,6 +53,12 @@ class Sequence(object):
     def _parse_raw_sequence(self, raw_sequence):
         return raw_sequence.splitlines()
 
+    def inputs(self):
+        return [point.input for point in self.points]
+
+    def outputs(self):
+        return [point.output for point in self.points]
+
 
 class Point(object):
     def __init__(self, raw_point, collection):
@@ -60,9 +71,8 @@ class Point(object):
     def _parse_raw_point(self, raw_point):
         # Insert raw point into dict to ensure uniqueness
         parsed_point = self.collection.point_parser(raw_point)
-        output = parsed_point['output']
 
-        self.collection.states[raw_point] = True
-        self.collection.outputs[output] = True
+        self.collection.states[parsed_point['input']] = True
+        self.collection.outputs[parsed_point['output']] = True
 
         return parsed_point

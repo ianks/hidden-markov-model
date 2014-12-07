@@ -3,26 +3,70 @@ try:
 except:
     pass
 
+import sys
+import math as Math
+
 class Viterbi(object):
-  def __init__(self, hmm):
-    self.hmm = hmm
+    def __init__(self, hmm):
+        self.hmm = hmm
+        self.states = hmm.states
 
-  # Returns the most likely state sequence for the given
-  # 'output' sequence, i.e., the state sequence of the highest
-  # conditional probability given the output sequence, according to
-  # the hmm that was provided by the constructor. The returned
-  # state sequence should have the same number of elements as the
-  # given output sequence
-  def mostLikelySequence(output):
-    #TODO
-    pass
+    # Returns the most likely state sequence for the given
+    # 'output' sequence, i.e., the state sequence of the highest
+    # conditional probability given the output sequence, according to
+    # the hmm that was provided by the constructor. The returned
+    # state sequence should have the same number of elements as the
+    # given output sequence
 
-    # Given an hmm with state space X, initial probabilities Pi transition matrix Aij that
-    # is P(i<t>| i<t-1>) and observations y1....yt the most likely state sequence x1..xt
-    # is calculated by:
+    def _init_backpointer(self, output):
+        back_pointer = [{}]
+        path = {}
 
-    # v<1,i> = P(y1|i) * Pi #base case
-    # v<t,i> = P(yt|i) * max(x in X)(A<x,i> * V<t-1, x>)
-    # where
-    # v<t,i> is the value for the most probable state sequence for t observations ending at state i
-    # xt = argmax(x in X)(v<t,x>) the state at time t is the one with the max v<t,x> value\\\\\\
+        # Initialize base cases (t == 0)
+        for state in self.states:
+            back_pointer[0][state] = self.hmm.start_prob(state) * \
+                    self.hmm.output_prob(state, output[0])
+            path[state] = [state]
+
+        return back_pointer, path
+
+    def most_likely_sequence(self, output):
+        lookup_lambda = lambda x: x[0]
+        hmm = self.hmm
+        back_pointer, path = self._init_backpointer(output)
+
+        print "\nCalculating most likely sequence... (one dot for every output)"
+        # Run Viterbi for t > 0
+        length = len(output)
+
+        for t in range(1, length):
+            sys.stdout.write('.')
+            sys.stdout.flush()
+            back_pointer.append({})
+            newpath = {}
+
+            for state in self.states:
+                state_prob_array = []
+
+                for state_0 in self.states:
+                    state_0_prob = back_pointer[t-1][state_0] * \
+                            hmm.trans_prob(state_0, state) * \
+                            hmm.output_prob(state, output[t])
+
+                    state_prob_array.append((state_0_prob, state_0))
+
+                (prob, max_state) = max(state_prob_array, key = lookup_lambda)
+                back_pointer[t][state] = prob
+                newpath[state] = path[max_state] + [state]
+
+            # Don't need to remember the old paths
+            path = newpath
+
+        n = 0
+        # if only one element is observed max is sought in the initialization values
+        if len(output) != 1:
+            n = t
+        (prob, state) = max((back_pointer[n][state], state) for state in self.states)
+
+        return (prob, path[state])
+
