@@ -27,7 +27,7 @@ class Viterbi(object):
             back_pointer[0][state] = self.hmm.start_prob(state) * self.hmm.output_prob(state, output[0])
             path[state] = [state]
 
-        print "Calculating most likely sequence... (one dot for every output)"
+        print "\nCalculating most likely sequence... (one dot for every output)"
         # Run Viterbi for t > 0
         for t in range(1, len(output)):
             sys.stdout.write('.')

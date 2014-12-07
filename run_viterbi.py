@@ -16,8 +16,7 @@ class run_viterbi(object):
         data = self.data
         hmm = self.hmm
         viterbi = Viterbi(hmm)
-        outputs = self.data.testing.sequences[0].outputs()
-        inputs = self.data.testing.sequences[0].inputs()
+
 
 
 
@@ -55,14 +54,17 @@ class run_viterbi(object):
             sys.stdout.flush()
 
         #Most likely sequence
-        prob, mls = viterbi.most_likely_sequence(outputs)
-        print "\nMost likely sequence:"
-        errors = 0
-        for i in range(len(inputs)):
-            print inputs[i], '\t', mls[i], '\t', outputs[i]
-            if inputs[i] != mls[i]:
-                errors += 1
-        print 'Errors:', errors, '/', len(inputs), '=', (errors/float(len(inputs)))
+        for i, sequence in enumerate(self.data.testing.sequences):
+            outputs = sequence.outputs()
+            inputs = sequence.inputs()
+            prob, mls = viterbi.most_likely_sequence(outputs)
+            print "\nMost likely sequence #"+str(i)+":"
+            errors = 0
+            for i in range(len(inputs)):
+                print inputs[i], '\t', mls[i], '\t', outputs[i]
+                if inputs[i] != mls[i]:
+                    errors += 1
+            print 'Errors:', errors, '/', len(inputs), '=', (errors/float(len(inputs)))
 
 
 
