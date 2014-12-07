@@ -20,10 +20,13 @@ class Viterbi(object):
     def most_likely_sequence(self, output):
         back_pointer = [{}]
         path = {}
+        lookup_lambda = lambda x: x[0]
+        hmm = self.hmm
 
         # Initialize base cases (t == 0)
         for state in self.states:
-            back_pointer[0][state] = self.hmm.start_prob(state) * self.hmm.output_prob(state, output[0])
+            back_pointer[0][state] = self.hmm.start_prob(state) * \
+                    self.hmm.output_prob(state, output[0])
             path[state] = [state]
 
         # Run Viterbi for t > 0
@@ -33,19 +36,21 @@ class Viterbi(object):
 
             for state in self.states:
                 state_prob_array = []
+
                 for state_0 in self.states:
-                    try:
-                        state_0_prob = back_pointer[t-1][state_0] * self.hmm.trans_prob(state_0, state) * self.hmm.output_prob(state, output[t])
-                    except:
-                        embed()
+                    state_0_prob = back_pointer[t-1][state_0] * \
+                            hmm.trans_prob(state_0, state) * \
+                            hmm.output_prob(state, output[t])
+
                     state_prob_array.append((state_0_prob, state_0))
-                # embed()
-                (prob, max_state) = max(state_prob_array, key=lambda x: x[0])
+
+                (prob, max_state) = max(state_prob_array, key = lookup_lambda)
                 back_pointer[t][state] = prob
                 newpath[state] = path[max_state] + [state]
 
             # Don't need to remember the old paths
             path = newpath
+
         n = 0
         # if only one element is observed max is sought in the initialization values
         if len(output) != 1:
