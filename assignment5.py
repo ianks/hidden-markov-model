@@ -54,7 +54,7 @@ def main():
             elif argument == '2':
                 data = src.Typo('data/typos10.data')
             elif argument == '3':
-                print "Functionality not implemented"
+                data = src.Topic('data/topics.data')
             elif argument == 't':
                 data = src.Robot('data/test_robot.data')
 
