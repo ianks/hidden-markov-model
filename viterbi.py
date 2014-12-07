@@ -18,17 +18,22 @@ class Viterbi(object):
     # state sequence should have the same number of elements as the
     # given output sequence
 
-    def most_likely_sequence(self, output):
+    def _init_backpointer(self, output):
         back_pointer = [{}]
         path = {}
-        lookup_lambda = lambda x: x[0]
-        hmm = self.hmm
 
         # Initialize base cases (t == 0)
         for state in self.states:
             back_pointer[0][state] = self.hmm.start_prob(state) * \
                     self.hmm.output_prob(state, output[0])
             path[state] = [state]
+
+        return back_pointer, path
+
+    def most_likely_sequence(self, output):
+        lookup_lambda = lambda x: x[0]
+        hmm = self.hmm
+        back_pointer, path = self._init_backpointer(output)
 
         print "Calculating most likely sequence... (one dot for every output)"
         # Run Viterbi for t > 0
