@@ -46,27 +46,27 @@ class Viterbi(object):
             newpath = {}
 
             for state in states:
-                state_prob_array = []
-                output_p = output_prob[state][output[t]]
+                current_max_prob = (0, None)
 
                 for state_0 in states:
                     state_0_prob = back_pointer[t-1][state_0] * \
-                            trans_prob[state_0][state] * \
-                            output_p
+                            trans_prob[state_0][state]
 
-                    state_prob_array.append((state_0_prob, state_0))
+                    if state_0_prob >= current_max_prob[0]:
+                        current_max_prob = (state_0_prob, state_0)
 
-                (prob, max_state) = max(state_prob_array, key = lookup_lambda)
-                back_pointer[t][state] = prob
+                (prob, max_state) = current_max_prob
                 newpath[state] = path[max_state] + [state]
+
+                # output_prob is a constant wrt t, so only multiply once
+                back_pointer[t][state] = prob * output_prob[state][output[t]]
 
             # Don't need to remember the old paths
             path = newpath
 
-        n = 0
         # if only one element is observed max is sought in the initialization values
-        if len(output) != 1:
-            n = t
+        n = t if len(output) != 1 else 0
+
         (prob, state) = max((back_pointer[n][state], state) for state in self.states)
 
         return (prob, path[state])
