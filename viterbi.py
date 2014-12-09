@@ -33,25 +33,26 @@ class Viterbi(object):
     def most_likely_sequence(self, output):
         lookup_lambda = lambda x: x[0]
         hmm = self.hmm
+        states = self.states
         back_pointer, path = self._init_backpointer(output)
 
-        print "\nCalculating most likely sequence... (one dot for every output)"
-        # Run Viterbi for t > 0
-        length = len(output)
+        # The cache is warm, use these
+        trans_prob = hmm.transitions_probabilities
+        output_prob = hmm.output_probabilities
 
-        for t in range(1, length):
-            sys.stdout.write('.')
-            sys.stdout.flush()
+        # Run Viterbi for t > 0
+        for t in range(1, len(output)):
             back_pointer.append({})
             newpath = {}
 
-            for state in self.states:
+            for state in states:
                 state_prob_array = []
+                output_p = output_prob[state][output[t]]
 
-                for state_0 in self.states:
+                for state_0 in states:
                     state_0_prob = back_pointer[t-1][state_0] * \
-                            hmm.trans_prob(state_0, state) * \
-                            hmm.output_prob(state, output[t])
+                            trans_prob[state_0][state] * \
+                            output_p
 
                     state_prob_array.append((state_0_prob, state_0))
 
@@ -69,4 +70,3 @@ class Viterbi(object):
         (prob, state) = max((back_pointer[n][state], state) for state in self.states)
 
         return (prob, path[state])
-
