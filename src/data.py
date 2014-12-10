@@ -39,22 +39,25 @@ class Collection(object):
 class Set(object):
     def __init__(self, raw_set, collection):
         self.collection = collection
+        self.output_counts = {}
+        self.input_counts = {}
         self.sequences = self._create_sequences(raw_set)
 
     def _create_sequences(self, raw_set):
-        return [Sequence(s, self.collection) for s in self._parse_raw_set(raw_set) if s]
+        return [Sequence(s, self.collection, self) for s in self._parse_raw_set(raw_set) if s]
 
     def _parse_raw_set(self, raw_set):
         return raw_set.split(self.collection.sequence_delimiter)
 
 
 class Sequence(object):
-    def __init__(self, raw_sequence, collection):
+    def __init__(self, raw_sequence, collection, current_set):
         self.collection = collection
+        self.set = current_set
         self.points = self._create_points(raw_sequence)
 
     def _create_points(self, raw_sequence):
-        return [Point(p, self.collection) for p in self._parse_raw_sequence(raw_sequence) if p]
+        return [Point(p, self.collection, self.set) for p in self._parse_raw_sequence(raw_sequence) if p]
 
     def _parse_raw_sequence(self, raw_sequence):
         return self.collection.sequence_parser(raw_sequence)
@@ -67,8 +70,9 @@ class Sequence(object):
 
 
 class Point(object):
-    def __init__(self, raw_point, collection):
+    def __init__(self, raw_point, collection, current_set):
         self.collection = collection
+        self.set = current_set
         self.data = self._parse_raw_point(raw_point)
 
         self.input = self.data['input']
@@ -77,8 +81,20 @@ class Point(object):
     def _parse_raw_point(self, raw_point):
         # Insert raw point into dict to ensure uniqueness
         parsed_point = self.collection.point_parser(raw_point)
+        inp = parsed_point['input']
+        out = parsed_point['output']
+        self.collection.states[inp] = True
+        self.collection.outputs[out] = True
+        out_tuple = (inp,out)
 
-        self.collection.states[parsed_point['input']] = True
-        self.collection.outputs[parsed_point['output']] = True
+        if inp not in self.set.input_counts:
+            self.set.input_counts[inp] = 1
+        else:
+            self.set.input_counts[inp] = self.set.input_counts[inp] + 1
+
+        if out_tuple not in self.set.output_counts:
+            self.set.output_counts[out_tuple] = 1
+        else:
+            self.set.output_counts[out_tuple] = self.set.output_counts[out_tuple] + 1
 
         return parsed_point

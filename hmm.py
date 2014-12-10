@@ -12,6 +12,7 @@ class Hmm(object):
     def __init__(self, data):
         self.unique_state_count = data.unique_state_count
         self.unique_outputs_count = data.unique_outputs_count
+        self.training = data.training
         self.training_set = data.training.sequences
         self.states = data.statekeys
         self.transitions_probabilities = {}
@@ -82,16 +83,16 @@ class Hmm(object):
     def _output_prob(self, state, output):
         output_count = 0
         state_count = 0
+        out_tuple = (state,output)
         # For all testing sequences
         # Count number of times the output occurs for the given state
-        for sequence in self.training_set:
-            for point in sequence.points:
-                if point.input == state:
-                    state_count += 1
-                    if point.output == output:
-                        output_count += 1
+        if out_tuple in self.training.output_counts:
+            output_count = self.training.output_counts[out_tuple]
+        if state in self.training.input_counts:
+            state_count = self.training.input_counts[state]
         # Using Laplace smoothing:
         # Divide by the number of times the state occurs
+        # embed()
         output_probability = (output_count + 1) / float(state_count + self.unique_outputs_count)
         # Natural log that puppy and return it
         return output_probability
