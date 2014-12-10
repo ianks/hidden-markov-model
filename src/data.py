@@ -39,8 +39,8 @@ class Collection(object):
 class Set(object):
     def __init__(self, raw_set, collection):
         self.collection = collection
-        self.output_counts = {}
-        self.input_counts = {}
+        self.state_output_counts = {}
+        self.state_counts = {}
         self.sequences = self._create_sequences(raw_set)
 
     def _create_sequences(self, raw_set):
@@ -81,20 +81,23 @@ class Point(object):
     def _parse_raw_point(self, raw_point):
         # Insert raw point into dict to ensure uniqueness
         parsed_point = self.collection.point_parser(raw_point)
-        inp = parsed_point['input']
-        out = parsed_point['output']
-        self.collection.states[inp] = True
-        self.collection.outputs[out] = True
-        out_tuple = (inp,out)
+        state = parsed_point['input']
+        output = parsed_point['output']
+        self.collection.states[state] = True
+        self.collection.outputs[output] = True
+        state_output = (state,output)
 
-        if inp not in self.set.input_counts:
-            self.set.input_counts[inp] = 1
+        # Cache state count
+        if state not in self.set.state_counts:
+            self.set.state_counts[state] = 1
         else:
-            self.set.input_counts[inp] = self.set.input_counts[inp] + 1
+            self.set.state_counts[state] = self.set.state_counts[state] + 1
 
-        if out_tuple not in self.set.output_counts:
-            self.set.output_counts[out_tuple] = 1
+        # Cache state ouput pair count
+        if state_output not in self.set.state_output_counts:
+            self.set.state_output_counts[state_output] = 1
         else:
-            self.set.output_counts[out_tuple] = self.set.output_counts[out_tuple] + 1
+            self.set.state_output_counts[state_output] = \
+                    self.set.state_output_counts[state_output] + 1
 
         return parsed_point

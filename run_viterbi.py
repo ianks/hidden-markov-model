@@ -50,6 +50,7 @@ class run_viterbi(object):
             sys.stdout.flush()
 
         #Most likely sequence
+        overall_error = 0
         for i, sequence in enumerate(self.data.testing.sequences):
             outputs = sequence.outputs()
             inputs = sequence.inputs()
@@ -63,4 +64,10 @@ class run_viterbi(object):
                 print inputs[i], '\t', mls[i], '\t', outputs[i]
                 if inputs[i] != mls[i]:
                     errors += 1
-            print 'Errors:', errors, '/', len(inputs), '=', (errors/float(inputs_len))
+            error_percentage = errors/float(inputs_len)
+            print 'Errors:', errors, '/', len(inputs), '=', error_percentage
+            overall_error += error_percentage / \
+                    float(len(self.data.testing.sequences))
+        correct_percent = 1 - overall_error
+        print "\nThe overall percent correct is " + \
+                "{0:.3f}".format(correct_percent) + "%"
