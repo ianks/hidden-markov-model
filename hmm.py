@@ -12,7 +12,8 @@ class Hmm(object):
     def __init__(self, data):
         self.unique_state_count = data.unique_state_count
         self.unique_outputs_count = data.unique_outputs_count
-        self.training_set = data.training.sequences
+        self.training_set = data.training
+        self.training_sequences = data.training.sequences
         self.states = data.statekeys
         self.transitions_probabilities = {}
         self.output_probabilities = {}
@@ -22,11 +23,11 @@ class Hmm(object):
     def start_prob(self, state):
         state_count = 0
         # Count the number of sequences starting with the given state
-        for sequence in self.training_set:
+        for sequence in self.training_sequences:
             if sequence.points[0].input == state:
                 state_count += 1
         # divide by the number of total sequences
-        state_probability = state_count / float(len(self.training_set))
+        state_probability = state_count / float(len(self.training_sequences))
         # Natural log that puppy and return it
         return state_probability
 
@@ -50,7 +51,7 @@ class Hmm(object):
         transition_count = 0
         # For all testing sequences
         # Count the number of transitions between from_state and to State
-        for sequence in self.training_set:
+        for sequence in self.training_sequences:
             points_len = len(sequence.points) - 1
 
             for i in range(points_len):
@@ -82,16 +83,20 @@ class Hmm(object):
     def _output_prob(self, state, output):
         output_count = 0
         state_count = 0
+        state_output = (state,output)
+
         # For all testing sequences
         # Count number of times the output occurs for the given state
-        for sequence in self.training_set:
-            for point in sequence.points:
-                if point.input == state:
-                    state_count += 1
-                    if point.output == output:
-                        output_count += 1
+        if state_output in self.training_set.state_output_counts:
+            output_count = self.training_set.state_output_counts[state_output]
+
+        # Get state count for training set
+        if state in self.training_set.state_counts:
+            state_count = self.training_set.state_counts[state]
+
         # Using Laplace smoothing:
         # Divide by the number of times the state occurs
-        output_probability = (output_count + 1) / float(state_count + self.unique_outputs_count)
+        output_probability = (output_count + 1) / \
+                float(state_count + self.unique_outputs_count)
         # Natural log that puppy and return it
         return output_probability
