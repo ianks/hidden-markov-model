@@ -15,13 +15,12 @@ import getopt, sys
 from hmm import Hmm
 from run_viterbi import run_viterbi
 
-debug = False
-
 def main():
 
     #Setup Variables
     data = None
     hmm = None
+    verbose = False
 
     #Import arguments and parse into options.
     try:
@@ -37,11 +36,10 @@ def main():
 
     for option, argument in optlist:
         if option == "-v":
-            debug = True
-            if debug:
-                #view input
-                print "\nProvided Arguments: "
-                print str(optlist) + "\n"
+            verbose = True
+            print "\nProvided Arguments: "
+            print str(optlist) + "\n"
+
         elif option == "-h":
             usage()
 
@@ -65,10 +63,12 @@ def main():
             if argument == '1':
                 # call HMM process
                 hmm = Hmm(data)
-                run_viterbi(data, hmm)
+
             elif argument == '2':
                 print "Functionality not implemented"
                 exit()
+
+    run_viterbi(data, hmm, verbose)
 
 def usage():
     print """
