@@ -6,6 +6,8 @@ except:
 import sys
 from viterbi import Viterbi
 
+import math as Math
+
 class run_viterbi(object):
     def __init__(self, data, hmm, verbose):
         self.data = data
@@ -20,7 +22,7 @@ class run_viterbi(object):
         #Start probabilitites
         print "Start probabilities:"
         for state in data.statekeys:
-            print state, ':\t', "{0:.3f}".format(hmm.start_prob(state))
+            print state, ':\t', "{0:.3f}".format(Math.exp(hmm.start_prob(state)))
 
         #Transition probabilities
         print "\nTransition probabilities:"
@@ -32,7 +34,7 @@ class run_viterbi(object):
         for from_state in data.states:
             sys.stdout.write(from_state + ' :')
             for to_state in data.states:
-                sys.stdout.write('\t' + "{0:.3f}".format(hmm.trans_prob(from_state, to_state)))
+                sys.stdout.write('\t' + "{0:.3f}".format(Math.exp(hmm.trans_prob(from_state, to_state))))
             sys.stdout.write('\n')
             sys.stdout.flush()
 
@@ -57,7 +59,7 @@ class run_viterbi(object):
         for state in data.states:
             sys.stdout.write(state + ' :')
             for output in sorted(data.outputs):
-                out_prob = hmm.output_prob(state, output)
+                out_prob = Math.exp(hmm.output_prob(state, output))
                 if print_outputs:
                     sys.stdout.write('\t' + "{0:.3f}".format(out_prob))
             if print_outputs:

@@ -3,7 +3,7 @@ try:
 except:
     pass
 
-import math as Math
+import math
 
 class Hmm(object):
 
@@ -32,7 +32,7 @@ class Hmm(object):
         # divide by the number of total sequences
         state_probability = state_count / float(len(self.training_sequences))
 
-        return state_probability
+        return math.log(state_probability) if state_probability != 0 else 0
 
     # cache the transition counts, running the loop only once
     def _initialize_trans_count(self):
@@ -64,7 +64,7 @@ class Hmm(object):
         if to_state in self.transitions_probabilities[from_state]:
             return self.transitions_probabilities[from_state][to_state]
 
-        prob = self._trans_prob(from_state, to_state)
+        prob = math.log(self._trans_prob(from_state, to_state))
         self.transitions_probabilities[from_state][to_state] = prob
 
         return prob
@@ -96,7 +96,7 @@ class Hmm(object):
         if output in self.output_probabilities[state]:
             return self.output_probabilities[state][output]
 
-        prob = self._output_prob(state, output)
+        prob = math.log(self._output_prob(state, output))
         self.output_probabilities[state][output] = prob
 
         return prob

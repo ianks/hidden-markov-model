@@ -24,7 +24,7 @@ class Viterbi(object):
 
         # Initialize base cases (t == 0)
         for state in self.states:
-            back_pointer[0][state] = self.hmm.start_prob(state) * \
+            back_pointer[0][state] = self.hmm.start_prob(state) + \
                     self.hmm.output_prob(state, output[0])
             path[state] = [state]
 
@@ -46,20 +46,20 @@ class Viterbi(object):
             newpath = {}
 
             for state in states:
-                current_max_prob = (0, None)
+                current_max_prob = (10, None)
 
                 for state_0 in states:
-                    state_0_prob = back_pointer[t-1][state_0] * \
+                    state_0_prob = back_pointer[t-1][state_0] + \
                             trans_prob[state_0][state]
 
-                    if state_0_prob >= current_max_prob[0]:
+                    if state_0_prob <= current_max_prob[0]:
                         current_max_prob = (state_0_prob, state_0)
 
                 (prob, max_state) = current_max_prob
                 newpath[state] = path[max_state] + [state]
 
                 # output_prob is a constant wrt t, so only multiply once
-                back_pointer[t][state] = prob * output_prob[state][output[t]]
+                back_pointer[t][state] = prob + output_prob[state][output[t]]
 
             # Don't need to remember the old paths
             path = newpath
@@ -67,6 +67,8 @@ class Viterbi(object):
         # if only one element is observed max is sought in the initialization values
         n = t if len(output) != 1 else 0
 
-        (prob, state) = max((back_pointer[n][state], state) for state in self.states)
+        (prob, state) = min((back_pointer[n][state], state) for state in self.states)
+
+        embed()
 
         return (prob, path[state])
