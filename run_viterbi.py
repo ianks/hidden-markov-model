@@ -1,8 +1,3 @@
-try:
-    from IPython import embed
-except:
-    pass
-
 import sys
 from viterbi import Viterbi
 
@@ -59,7 +54,7 @@ class run_viterbi(object):
             for output in sorted(data.outputs):
                 out_prob = hmm.output_prob(state, output)
                 if print_outputs:
-                    sys.stdout.write('\t' + "{0:.3f}".format(out_prob))
+                    sys.stdout.write('\t' + "{0:.3f}".format(float(out_prob)))
             if print_outputs:
                 sys.stdout.write('\n')
                 sys.stdout.flush()

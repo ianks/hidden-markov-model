@@ -1,8 +1,3 @@
-try:
-    from IPython import embed
-except:
-    pass
-
 import math as Math
 
 class Hmm(object):

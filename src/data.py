@@ -1,8 +1,3 @@
-try:
-    from IPython import embed
-except:
-    pass
-
 class Collection(object):
     def __init__(self, file, sequence_delimiter, sequence_parser, point_parser):
         self.set_delimiter = '..'

@@ -1,8 +1,3 @@
-try:
-    from IPython import embed
-except:
-    pass
-
 import sys
 import math as Math
 
