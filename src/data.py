@@ -39,22 +39,25 @@ class Collection(object):
 class Set(object):
     def __init__(self, raw_set, collection):
         self.collection = collection
+        self.state_output_counts = {}
+        self.state_counts = {}
         self.sequences = self._create_sequences(raw_set)
 
     def _create_sequences(self, raw_set):
-        return [Sequence(s, self.collection) for s in self._parse_raw_set(raw_set) if s]
+        return [Sequence(s, self.collection, self) for s in self._parse_raw_set(raw_set) if s]
 
     def _parse_raw_set(self, raw_set):
         return raw_set.split(self.collection.sequence_delimiter)
 
 
 class Sequence(object):
-    def __init__(self, raw_sequence, collection):
+    def __init__(self, raw_sequence, collection, current_set):
         self.collection = collection
+        self.set = current_set
         self.points = self._create_points(raw_sequence)
 
     def _create_points(self, raw_sequence):
-        return [Point(p, self.collection) for p in self._parse_raw_sequence(raw_sequence) if p]
+        return [Point(p, self.collection, self.set) for p in self._parse_raw_sequence(raw_sequence) if p]
 
     def _parse_raw_sequence(self, raw_sequence):
         return self.collection.sequence_parser(raw_sequence)
@@ -67,8 +70,9 @@ class Sequence(object):
 
 
 class Point(object):
-    def __init__(self, raw_point, collection):
+    def __init__(self, raw_point, collection, current_set):
         self.collection = collection
+        self.set = current_set
         self.data = self._parse_raw_point(raw_point)
 
         self.input = self.data['input']
@@ -77,8 +81,23 @@ class Point(object):
     def _parse_raw_point(self, raw_point):
         # Insert raw point into dict to ensure uniqueness
         parsed_point = self.collection.point_parser(raw_point)
+        state = parsed_point['input']
+        output = parsed_point['output']
+        self.collection.states[state] = True
+        self.collection.outputs[output] = True
+        state_output = (state,output)
 
-        self.collection.states[parsed_point['input']] = True
-        self.collection.outputs[parsed_point['output']] = True
+        # Cache state count
+        if state not in self.set.state_counts:
+            self.set.state_counts[state] = 1
+        else:
+            self.set.state_counts[state] = self.set.state_counts[state] + 1
+
+        # Cache state ouput pair count
+        if state_output not in self.set.state_output_counts:
+            self.set.state_output_counts[state_output] = 1
+        else:
+            self.set.state_output_counts[state_output] = \
+                    self.set.state_output_counts[state_output] + 1
 
         return parsed_point

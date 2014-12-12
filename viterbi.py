@@ -33,40 +33,40 @@ class Viterbi(object):
     def most_likely_sequence(self, output):
         lookup_lambda = lambda x: x[0]
         hmm = self.hmm
+        states = self.states
         back_pointer, path = self._init_backpointer(output)
 
-        print "\nCalculating most likely sequence... (one dot for every output)"
-        # Run Viterbi for t > 0
-        length = len(output)
+        # The cache is warm, use these
+        trans_prob = hmm.transitions_probabilities
+        output_prob = hmm.output_probabilities
 
-        for t in range(1, length):
-            sys.stdout.write('.')
-            sys.stdout.flush()
+        # Run Viterbi for t > 0
+        for t in range(1, len(output)):
             back_pointer.append({})
             newpath = {}
 
-            for state in self.states:
-                state_prob_array = []
+            for state in states:
+                current_max_prob = (0, None)
 
-                for state_0 in self.states:
+                for state_0 in states:
                     state_0_prob = back_pointer[t-1][state_0] * \
-                            hmm.trans_prob(state_0, state) * \
-                            hmm.output_prob(state, output[t])
+                            trans_prob[state_0][state]
 
-                    state_prob_array.append((state_0_prob, state_0))
+                    if state_0_prob >= current_max_prob[0]:
+                        current_max_prob = (state_0_prob, state_0)
 
-                (prob, max_state) = max(state_prob_array, key = lookup_lambda)
-                back_pointer[t][state] = prob
+                (prob, max_state) = current_max_prob
                 newpath[state] = path[max_state] + [state]
+
+                # output_prob is a constant wrt t, so only multiply once
+                back_pointer[t][state] = prob * output_prob[state][output[t]]
 
             # Don't need to remember the old paths
             path = newpath
 
-        n = 0
         # if only one element is observed max is sought in the initialization values
-        if len(output) != 1:
-            n = t
+        n = t if len(output) != 1 else 0
+
         (prob, state) = max((back_pointer[n][state], state) for state in self.states)
 
         return (prob, path[state])
-
