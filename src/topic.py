@@ -1,8 +1,3 @@
-try:
-    from IPython import embed
-except:
-    pass
-
 import data
 import re
 
