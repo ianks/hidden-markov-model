@@ -28,6 +28,11 @@ class Viterbi(object):
                     self.hmm.output_prob(state, output[0])
             path[state] = [state]
 
+        # Normalize backpointer values
+        alpha = sum(back_pointer[0].values())
+        for key in back_pointer[0]:
+            back_pointer[0][key] = back_pointer[0][key] / alpha
+
         return back_pointer, path
 
     def most_likely_sequence(self, output):
@@ -60,6 +65,11 @@ class Viterbi(object):
 
                 # output_prob is a constant wrt t, so only multiply once
                 back_pointer[t][state] = prob * output_prob[state][output[t]]
+
+            # Normalize backpointer values
+            alpha = sum(back_pointer[t].values())
+            for key in back_pointer[t]:
+                back_pointer[t][key] = back_pointer[t][key] / alpha
 
             # Don't need to remember the old paths
             path = newpath
