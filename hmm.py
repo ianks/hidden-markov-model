@@ -1,5 +1,3 @@
-import math as Math
-
 class Hmm(object):
 
     # numStates, unique_outputs_count are integer values
@@ -42,14 +40,12 @@ class Hmm(object):
                 if from_to not in self.from_to_trans_counts:
                     self.from_to_trans_counts[from_to] = 1
                 else:
-                    self.from_to_trans_counts[from_to] = \
-                            self.from_to_trans_counts[from_to] + 1
+                    self.from_to_trans_counts[from_to] += 1
 
                 if from_state not in self.from_trans_counts:
                     self.from_trans_counts[from_state] = 1
                 else:
-                    self.from_trans_counts[from_state] = \
-                            self.from_trans_counts[from_state] + 1
+                    self.from_trans_counts[from_state] += 1
 
     # Cache the trans probabilities
     def trans_prob(self, from_state, to_state):
