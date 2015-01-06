@@ -3,10 +3,7 @@ class Hmm(object):
     # numStates, unique_outputs_count are integer values
     # state, output are 2D Arrays
     def __init__(self, data):
-        self.unique_state_count = data.unique_state_count
-        self.unique_outputs_count = data.unique_outputs_count
-        self.training_set = data.training
-        self.training_sequences = data.training.sequences
+        self.data = data
         self.states = data.statekeys
         self.transitions_probabilities = {}
         self.output_probabilities = {}
@@ -19,17 +16,18 @@ class Hmm(object):
     def start_prob(self, state):
         state_count = 0
         # Count the number of sequences starting with the given state
-        for sequence in self.training_sequences:
+        for sequence in self.data.training.sequences:
             if sequence.points[0].input == state:
                 state_count += 1
         # divide by the number of total sequences
-        state_probability = state_count / float(len(self.training_sequences))
+        seq_len = float(len(self.data.training.sequences))
+        state_probability = state_count / seq_len
 
         return state_probability
 
     # cache the transition counts, running the loop only once
     def _initialize_trans_count(self):
-        for sequence in self.training_sequences:
+        for sequence in self.data.training.sequences:
             points_len = len(sequence.points) - 1
 
             for i in range(points_len):
@@ -70,14 +68,13 @@ class Hmm(object):
         # Count the number of transitions between from_state and to State
         if from_to in self.from_to_trans_counts:
             transition_from_to_count = self.from_to_trans_counts[from_to]
+
         transitions_count = self.from_trans_counts[from_state]
+        transitions_count += float(self.data.unique_state_count)
 
         # Using Laplace smoothing:
-        # Divide by number of transitions from the from_state to any State
-        transition_probability = (transition_from_to_count+1) / \
-                float(transitions_count + self.unique_state_count)
-
-        return transition_probability
+        # Divide by number of transitions from the from_state to any state
+        return (transition_from_to_count + 1) / transitions_count
 
     # Cache output probabilities
     def output_prob(self, state, output):
@@ -101,16 +98,15 @@ class Hmm(object):
 
         # For all testing sequences
         # Count number of times the output occurs for the given state
-        if state_output in self.training_set.state_output_counts:
-            output_count = self.training_set.state_output_counts[state_output]
+        if state_output in self.data.training.state_output_counts:
+            output_count = self.data.training.state_output_counts[state_output]
 
         # Get state count for training set
-        if state in self.training_set.state_counts:
-            state_count = self.training_set.state_counts[state]
+        if state in self.data.training.state_counts:
+            state_count = self.data.training.state_counts[state]
+
+        state_count += float(self.data.unique_outputs_count)
 
         # Using Laplace smoothing:
         # Divide by the number of times the state occurs
-        output_probability = (output_count + 1) / \
-                float(state_count + self.unique_outputs_count)
-
-        return output_probability
+        return (output_count + 1) / state_count
