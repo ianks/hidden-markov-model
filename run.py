@@ -12,7 +12,7 @@ import src
 import getopt
 import sys
 
-from hmm import Hmm
+from src.hmm import Hmm
 from run_viterbi import RunViterbi
 
 
