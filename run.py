@@ -9,43 +9,44 @@
 #    3. Distrubution over the start state P(X[0])
 
 import src
-import profile
-import getopt, sys
+import getopt
+import sys
 
 from hmm import Hmm
-from run_viterbi import run_viterbi
+from run_viterbi import RunViterbi
+
 
 def main():
 
-    #Setup Variables
+    # Setup Variables
     data = None
     hmm = None
     verbose = False
 
-    #Import arguments and parse into options.
+    # Import arguments and parse into options.
     try:
         optlist, remainder = getopt.getopt(sys.argv[1:], 'p:o:vh')
-        #If no arguments profided
+        # If no arguments profided
         if len(optlist) == 0:
-            print "***Options required***"
+            print("***Options required***")
             usage()
-    #if inappropriate argument provided
+    # If inappropriate argument provided
     except getopt.GetoptError as err:
-        print str(err)
+        print(str(err))
         usage()
 
     for option, argument in optlist:
         if option == "-v":
             verbose = True
-            print "\nProvided Arguments: "
-            print str(optlist) + "\n"
+            print("\nProvided Arguments: ")
+            print(str(optlist) + "\n")
 
         elif option == "-h":
             usage()
 
         elif option == "-p":
             if argument not in ('1', '2', '3', 't'):
-                print "You must input a problem number"
+                print("You must input a problem number")
                 usage()
             if argument == '1':
                 data = src.Robot('data/robot_no_momemtum.data')
@@ -58,20 +59,21 @@ def main():
 
         elif option == '-o':
             if argument not in ('1', '2'):
-                print "You must input a valid hmm order"
+                print("You must input a valid hmm order")
                 usage()
             if argument == '1':
                 # call HMM process
                 hmm = Hmm(data)
 
             elif argument == '2':
-                print "Functionality not implemented"
+                print("Functionality not implemented")
                 exit()
 
-    run_viterbi(data, hmm, verbose)
+    RunViterbi(data, hmm, verbose)
+
 
 def usage():
-    print """
+    print("""
 
     Usage:
     ---
@@ -94,7 +96,8 @@ def usage():
         python assignment5.py -p 2 -o 1
         (Run with Typo Correction and first-order HMM)
 
-    """
+    """)
+
     sys.exit(2)
 
 if __name__ == "__main__":
