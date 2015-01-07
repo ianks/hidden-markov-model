@@ -13,7 +13,7 @@ import getopt
 import sys
 
 from src.hmm import Hmm
-from run_viterbi import RunViterbi
+from src.run_viterbi import RunViterbi
 
 
 def main():
