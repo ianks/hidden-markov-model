@@ -17,7 +17,6 @@ from run_viterbi import RunViterbi
 
 
 def main():
-
     # Setup Variables
     data = None
     hmm = None
@@ -49,13 +48,13 @@ def main():
                 print("You must input a problem number")
                 usage()
             if argument == '1':
-                data = src.Robot('data/robot_no_momemtum.data')
+                data = src.models.Robot('data/robot_no_momemtum.data')
             elif argument == '2':
-                data = src.Typo('data/typos10.data')
+                data = src.models.Typo('data/typos10.data')
             elif argument == '3':
-                data = src.Topic('data/topics.data')
+                data = src.models.Topic('data/topics.data')
             elif argument == 't':
-                data = src.Robot('data/test_robot.data')
+                data = src.models.Robot('data/test_robot.data')
 
         elif option == '-o':
             if argument not in ('1', '2'):

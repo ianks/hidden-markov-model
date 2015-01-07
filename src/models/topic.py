@@ -1,5 +1,6 @@
-import data
+from .. import data
 import re
+
 
 class Topic(data.Collection):
     def __init__(self, file):
@@ -15,4 +16,5 @@ class Topic(data.Collection):
             return {'input': inp, 'output': out}
 
         sequence_delimiter = '\n'
-        data.Collection.__init__(self, file, sequence_delimiter, sequence_parser, point_parser)
+        data.Collection.__init__(self, file, sequence_delimiter,
+                                 sequence_parser, point_parser)
